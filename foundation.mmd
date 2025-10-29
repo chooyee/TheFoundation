@@ -1,0 +1,84 @@
+---
+config:
+  theme: neo
+  layout: elk
+---
+flowchart TD
+ subgraph External["🌐 External Systems"]
+        M365["🗂️ Microsoft 365 / SharePoint"]
+        EntraID["Azure Entra ID"]
+        DOPCT["DOP Call Tree Service"]
+        Foundry["Azure AI Foundry"]
+        Teams["💬 Teams / Outlook Interface"]
+  end
+ subgraph Core["🧩 Core AI Platform Services"]
+        UP["📇 User Profile Service<br><small>Extract job title, gender, reporting line, access role</small>"]
+        EH["🕰️ Episodic History Service<br><small>Store chat sessions as episodic memory</small>"]
+        KG["🧠 NER → Knowledge Graph Service<br><small>Convert entities into KG triples</small>"]
+        RAG["📘 RAG Pipeline Service<br><small>Index SharePoint docs, webhook sync</small>"]
+        BC["⚙️ Bot Creation Pipeline Service<br><small>Create &amp; deploy new bots</small>"]
+        BR["💬 Bot Runtime Service<br><small>Handles inference and conversation logic</small>"]
+        TWF["⏱️ Temporal Workflow Orchestrator<br><small>Manage document ingestion lifecycle<br>triggered by M365 or Admin</small>"]
+  end
+ subgraph Adv["🧠 Advanced Intelligence & Governance Layer (Phase 6)"]
+        SUM["🪄 Auto-summary Service<br><small>Summarizes user’s last N episodes</small>"]
+        EXP["🔍 Explainability Panel Service<br><small>Show contributing docs &amp; KG triples</small>"]
+        COST["💰 Cost-aware Response Service<br><small>Track token usage and cost</small>"]
+        RET["🧹 Data Retention &amp; Deletion Service<br><small>Compliance &amp; user “forget” flow</small>"]
+        GOV["🛡️ AI Governance Service<br><small>Policy enforcement, audit, risk scoring</small>"]
+  end
+ subgraph Data["💾 Data & Storage Layer"]
+        COSMOS[("🪐 Cosmos DB")]
+        SEARCH[("🔎 Cognitive Search Index")]
+        BLOB[("🗃️ Blob Storage")]
+        LOGS[("📊 Log Analytics / App Insights")]
+  end
+    U["👤 End User"] -- Chat / Create Bots --> UI["🧭 Bot Dashboard & Chat UI"]
+    A["🧑‍💼 Admin / Governance Officer"] -- Monitor / Manage Policies --> UI
+    UI --> AGW["🧱 API Gateway / Orchestrator"] & BR & GOV & EXP & COST
+    AGW --> UP & EH & BC & BR & GOV & TWF
+    M365 -- Webhook (doc uploaded) --> TWF
+    A -- Trigger ingestion --> TWF
+    TWF --> RAG & KG & BLOB & COSMOS & GOV
+    EH --> SUM & COSMOS
+    SUM --> COSMOS
+    RAG --> SEARCH & COSMOS
+    BR --> RAG & KG & EXP & COST & GOV
+    GOV --> BLOB & COSMOS & LOGS
+    RET --> COSMOS & BLOB
+    COST --> LOGS
+    BC --> GOV
+    EntraID --> UP
+    DOPCT --> UP
+    Teams --> BR
+    Foundry --> BR
+    KG --> COSMOS
+    UP --> COSMOS
+    External --> n1["Untitled Node"]
+     M365:::external
+     Foundry:::external
+     Teams:::external
+     UP:::service
+     EH:::service
+     KG:::service
+     RAG:::service
+     BC:::service
+     BR:::service
+     TWF:::service
+     SUM:::adv
+     EXP:::adv
+     COST:::adv
+     RET:::adv
+     GOV:::adv
+     COSMOS:::data
+     SEARCH:::data
+     BLOB:::data
+     LOGS:::data
+     U:::ui
+     UI:::ui
+     A:::ui
+    classDef service fill:#e6f3ff,stroke:#0078d4,stroke-width:1px,color:#111
+    classDef data fill:#fff5e6,stroke:#ffb300,stroke-width:1px,color:#111
+    classDef adv fill:#f4e6ff,stroke:#b36bff,stroke-width:1px,color:#111
+    classDef external fill:#f2f2f2,stroke:#999,stroke-width:1px,color:#111
+    classDef ui fill:#e6ffe6,stroke:#009933,stroke-width:1px,color:#111
